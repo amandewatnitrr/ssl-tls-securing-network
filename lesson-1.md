@@ -38,4 +38,14 @@
 
   ![](./imgs/Cryptography101_Artboard-1024x584%201%20(traced).svg)
 
-- 
+- Well, let's take a couple of few simple examples but alos on a mobile device.
+
+- We might encrypt all of the contents of the mobile device itself including any removable mediua like MicroSD cards.
+
+- We can use crypto to encryp the file system for protection of data at rest.
+
+- We can also use it to encrypt network traffic, such as encrypting http-secured website.
+
+- We can use cryptography for file hashing, where we can generate a unique file hash or value, and than compare that in future when we take the hash again to the orignal hash, to see if a change has been made.
+
+- We can also use cryptography with cryptocurrency blockchain transactions.
