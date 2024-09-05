@@ -342,3 +342,42 @@ graph TD
 
     %% Defining colors for different tiers
 ```
+
+## Certificare Authourities (CAs)
+
+- Certificate Authorities are a crucial part of the PKI hierarchy.
+
+- Certificate or Registration Authorities, depending on where they exist in the hierarchy, have a longer validity period than a standard-issued certificate.
+
+- They have a longer validity period because they are used to sign other certificates, and if they expire, all the certificates they have signed would also be considered invalid.
+
+- This is determined when you configure your environment where certificates are issued if you are setting up a PKI. The Certificate or Registration Authority then can issue new certificates, can renew certificates before they expire, and can also revoke certificates due to things like security compromise. 
+
+- The authorities can also publish a certificate revocation list, or a CRL, over a variety of protocols, including things like http, and this certificate revocation list can then be retrieved by clients before they partake in communication that would use PKI certificates because if there are revoked certificates, they don't want to communicate with anything related to that for security purposes. 
+
+- Now, CAs, or Certificate Authorities, at the very top of the hierarchy, the Root CA as it's called, can issue certificates to subordinate Registration Authorities, or RAs, and then in turn, the RAs can issue entity certificates to users, devices, and software, so a compromised top-level CA, or, as we're calling it, the Root CA, means that all subordinate certificates would be compromised. 
+
+- In a **Single-Tier PKI Hierarchy**, we know that we've got the CA, or the Certificate Authority, at the top, and it can issue certificates, but what we have here is a chain of trust, and what that means is that the digital signature of the Certificate Authority will exist in all of the certificates that it issues, and that's called chain of trust. In other words, if we trust the Certificate Authority, we trust all of the certificates that it has issued. 
+
+- The same concept also works well with the **Multi-Tier PKI Hierarchy**, where you've got a Certificate Authority at the top, the Root CA, and then subordinate Registration Authorities that issue certificates.
+
+  - Now, in this case, we know that the Root CA should be kept offline for security purposes because if it's compromised, everything in the hierarchy's compromised.
+
+  - Now, when will we work with Registration Authorities, or, as they call them, subordinate Certificate Authorities.
+  - You might have RAs for different departments within the organization, or for different projects, for child companies, or even for different geographic regions, so this way you would make sure that the appropriate administrative team, IT admin team, has the appropriate Registration Authority, and they can issue their own certificates.
+  - Now, these certificates, as we know, can be issued to users, devices, or applications, and, again, here we have a chain of trust, except on multiple levels compared to our previous discussion a moment ago.
+  - What this means, then, is that if we trust the Certificate Authority at the top, the Root CA, then by extension, we will trust Registration Authorities under it and all of the certificates that those Registration Authorities issue.
+
+- This chain of trust is important because software will check this. For example, your web browser has a list of trusted certificates that it uses to determine whether you're connected to a site that is trusted or not, and most web browsers will tell you, you've probably seen this, that it might not be able to verify the identity of the site or the site is not to be trusted. As an example, take a look at this sample web page. We have a message that says our connection is not private, and, up in the address bar, https is crossed out because it's not a secured or safe connection, and if I click up here, this is the Google Chrome browser, by the way, if I click where it says not secure, I can also click on the certificate, which it's saying is invalid, it says the certificate is expired. Well, indeed, I can see that the validity date here is back in 2015, so certainly, yes, the certificate has expired, and that's why my web browser is resulting in these messages. The chain of trust, then, is very important in a Public Key Infrastructure Hierarchy, so that CAs need to be trusted, otherwise PKI is meaningless.
+
+  ![](./imgs/546060-637199619021279203-16x9-1.jpg)
+
+- Certificates, as we know, contain the digital signature of the issuing Certificate Authority.
+
+- The thing about this is that digital signatures are created with that entity's private key, so the private key of the Certificate Authority, so that key is kept private and secured and is not easily spoofed, and that's why we can trust that digital signature.
+
+- Digital signatures get verified, by the way, using the related public key, so if the Certificate Authority digitally signs a certificate with its private key, we can verify that signature with the authority's public key.
+
+- We can also, though, use self-signed CAs within your organization. This means, then, that you are creating your own Public Key Infrastructure. You're creating your own hierarchy instead of going out to some other organization that is trusted globally to issue certificates, and as a result, your self-signed Certificate Authority, by default, will not be in this Trusted Root Certification Authority list.
+
+- Therefore, nothing will trust a self-signed CA by default. Therefore, CA certificates can be added to a device, to the trusted certificate store, to suppress warning messages.
