@@ -283,3 +283,62 @@
   - A digital certificate is a file that contains the public key, the identity of the certificate holder, and the digital signature of the CA & RA.
   - It is used to verify the identity of the certificate holder and establish secure communication.
   - Contains information such as the subject name, public key, validity period, and the digital signature of the CA.
+
+### Single Tier PKI Hierarchy:
+
+- We can setup PKI within an Organization in a single-tier hierarchy.
+- That means at the top of the hierarchy we would configure CA.
+- And, directly, from it we would issue certificates for users, devices or applications. And each certifacte results in a Public Key and a Private Key, that may or may not be stored in the certificate.
+- The Public and Private Key for each certificate is unique, so we don't get the same publci certificate for all the issued certificates.
+
+```mermaid
+graph TD
+    A[Root CA/Issuing CA] --> B[End User Certificate 1]
+    A --> C[End User Certificate 2]
+    A --> D[End User Certificate 3]
+    A --> E[End User Certificate 4]
+    
+    class A tier;
+    class B tier;
+    class C tier;
+    class D tier;
+    class E tier;
+   
+```
+
+### Multi-Tier PKI Hierarchy:
+
+- We might also choose to use a Multi-Tier PKI Hierarchy, where at the top we have the Root CA, under which we have Registration Authorities (RAs)/Subordinate CAs.
+- And, than these RAs will issue certificates to users, devices or applications.
+- We can keep the Root CA offline, and use the Subordinate CAs for day-to-day certificate issuance, unless we need to create a new RA or Subordinate CA. Because, if the CA is compromised, all the RA and Subordinate CAs under it are also compromised, resulting in a complete PKI compromise. However, if only the RA/SCA is compromised, only the certificates issued by that RA/SCA are compromised.
+
+```mermaid
+graph TD
+    A[Root CA] --> B[Intermediate CA 1]
+    A --> C[Intermediate CA 2]
+    
+    B --> D[Issuing CA 1]
+    B --> E[Issuing CA 2]
+    
+    C --> F[Issuing CA 3]
+    C --> G[Issuing CA 4]
+    
+    D --> H[End User Certificate 1]
+    E --> I[End User Certificate 2]
+    F --> J[End User Certificate 3]
+    G --> K[End User Certificate 4]
+    
+    class A tier;
+    class B tier;
+    class C tier;
+    class D tier;
+    class E tier;
+    class F tier;
+    class G tier;
+    class H tier;
+    class I tier;
+    class J tier;
+    class K tier;
+
+    %% Defining colors for different tiers
+```
