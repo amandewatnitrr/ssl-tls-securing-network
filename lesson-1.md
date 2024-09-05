@@ -1,5 +1,7 @@
 # SSL/TLS: Seuring Network Communication
 
+  ![](./imgs/Cryptography101_Artboard-1024x584%201%20(traced).svg)
+
 ## Cryptography Overview
 
 - SSL and TLS are cryptographic protocols that provide security for network communications.
@@ -35,8 +37,6 @@
   ![](./imgs/Screen-Shot-2018-10-26-at-1.webp)
 
 ## Where is Cryptography Used?
-
-  ![](./imgs/Cryptography101_Artboard-1024x584%201%20(traced).svg)
 
 - Well, let's take a couple of few simple examples but alos on a mobile device.
 
