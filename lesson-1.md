@@ -249,14 +249,14 @@
 
   ![](./imgs/Public-Key-Infrastructure-AppViewX-2020.jpg)
 
-- `CAs (Certificate Authorities)`
+- **`CAs (Certificate Authorities)`**
 
   - Trusted entities that issue New digital certificates to devices, applications, or users.
   - Verify the identity of the certificate holder.
   - Issue certificates for a specific period of time.
   - Maintain a Certificate Revocation List (CRL) of revoked certificates.
 
-- `Registration Authorities (RAs)`
+- **`Registration Authorities (RAs)`**
 
   - Also known as Subordinate CAs.
   - It exists underneath the CA in the PKI hierarchy.
@@ -264,21 +264,21 @@
   - Forward the certificate request to the CA for issuance.
   - Handle the registration process for certificate requests.
 
-- `Certificate Revocation List (CRL)`
+- **`Certificate Revocation List (CRL)`**
 
   - Also known as Online Certificate Status Protocol (OCSP).
   - Used to verify the validity of a certificate.
   - A list of certificates that have been revoked by the CA before their expiration date.
   - Contains the serial number of the revoked certificate and the reason for revocation.
 
-- `Certificate Templates`
+- **`Certificate Templates`**
 
   - It's a blueprint that can be used when issuing the certificates, and can be customized depending on the needs.
   - Defines the format and content of the certificate.
   - Contains information such as the subject name, key usage, and validity period.
   - Used to create new certificates based on predefined templates
 
-- `Certificate`
+- **`Certificate`**
 
   - A digital certificate is a file that contains the public key, the identity of the certificate holder, and the digital signature of the CA & RA.
   - It is used to verify the identity of the certificate holder and establish secure communication.
