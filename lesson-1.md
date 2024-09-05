@@ -1,4 +1,4 @@
-# SSL/TLS: Seuring Network Comm
+# SSL/TLS: Seuring Network Communication
 
 ## Cryptography Overview
 
