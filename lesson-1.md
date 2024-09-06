@@ -381,3 +381,141 @@ graph TD
 - We can also, though, use self-signed CAs within your organization. This means, then, that you are creating your own Public Key Infrastructure. You're creating your own hierarchy instead of going out to some other organization that is trusted globally to issue certificates, and as a result, your self-signed Certificate Authority, by default, will not be in this Trusted Root Certification Authority list.
 
 - Therefore, nothing will trust a self-signed CA by default. Therefore, CA certificates can be added to a device, to the trusted certificate store, to suppress warning messages.
+
+## Certificates
+
+- SSL and TLS are directly related to PKI certificates.
+- We can't have SSL or TLS without PKI.
+- It's a PKI certificate that can be used for either SSL or TLS securing of network communications, not TLS or SSL certificates.
+- Certificates are issued to users. They could be issued to devices like a smartphone, or they can be issued to software applications. And so certificates have a designated, specific use such as being used for encrypting files or for securing network traffic using TLS.
+- Developers might get a code-signing PKI certificate to digitally sign their software, including scripts that they might create like PowerShell scripts or Linux bashell scripts.
+- The use of the certificate then is defined in the certificate template. Kind of of like the name implies, the certificate template really serves as a blueprint that's used by the Certification Authority to issue certificates.
+- Certificates also have to be stored somewhere if they're going to be used, and there are many places that they could be stored, and many ways they can be accessed. A PKI certificate could be stored in a file, on a device. It could be stored on a smart card that might be used to authenticate to a restricted computer system in the office. Certificate information could be stored in firmware, TPM, the Trusted Platform Module that might be used so that we can encrypt an entire disk farm on a machine running Windows using the Windows BitLocker feature.
+
+- So, what exactly exists inside a PKI Certificate?
+
+  - **`Version`**
+
+    - PKI has a version number, and it's used to identify the format of the certificate.
+    - The current version is `3`, which is used by most CAs.
+    - Along with the version number, the certificate also contains the serial number, which is a unique identifier for the certificate.
+    - The Serial Number is used to track the certificate through CRLs(Certificate Revocation Lists).
+
+  - **`Subject Name`**
+
+    - The name of the entity to which the certificate is issued.
+    - It could be a user, device, or application.
+    - It could be a domain name or an IP address.
+
+  - **`Public Key`**
+
+    - The public key of the entity.
+    - Used for encryption and verifying digital signatures.
+    - It's mathematically related to the private key.
+
+  - **`Issuer Name`**
+
+    - The name of the Certificate Authority that issued the certificate.
+    - It's the digital signature of the CA that verifies the certificate.
+
+  - **`Validity Period`**
+
+    - The period for which the certificate is valid.
+    - It has a start date and an expiration date.
+    - After the expiration date, the certificate is no longer valid.
+
+  - **`Digital Signature`**
+
+    - The digital signature of the CA that issued the certificate.
+    - It's used to verify the authenticity of the certificate, to establish a chain of trust.
+    - It's created using the CA's private key.
+
+  - **`Key Usage`**
+
+    - Specifies the purpose for which the public key can be used.
+    - It could be for encryption, digital signatures, or both.
+    - It's defined in the certificate template.
+
+  - **`Extended Key Usage`**
+
+    - Specifies the specific uses for which the public key can be used.
+    - It could be for client authentication, server authentication, code signing, etc.
+    - It's defined in the certificate template.
+
+  - **`Thumbprint`**
+
+    - A unique hash value that identifies the certificate.
+    - It's used to verify the integrity of the certificate.
+    - It's used to compare certificates.
+
+  - One can also check the validity of the the certificate using something called Online Certificate Status Protocol (OCSP), which is a protocol that's used to check the validity of a certificate in real time.
+
+    - It consist of a client component that does the querying and server-side responder component that respond to these queries.
+
+    - So, it allows for the querying of the status of a specific certificate, and unlike the Certificate Revocation List or the CRL, the entire list does not have to be downloaded to the client in order to determine if the certificate is valid or not.
+
+    - OCSP Stapling is a feature that allows the web server to query the OCSP responder and then cache the response, and then send that response to the client, so that the client doesn't have to query the OCSP responder itself.
+
+      - Basically, the certificate owner itself checks the CA for it's own status periodically.
+
+      - Now this might be a web server that's using a certificate for SSL or TLS purposes. What happens then is clients that connect to, in our example, the secured website, would receive the OCSP status for that website's certificate when they initially connect to that site. And what happens then or what doesn't happen is that the client does not have to query the OCSP responder directly for the status of that certificate because the web server, in this example, has been doing it for us, and we just get that information conveniently as a client when we connect to that secured site.
+
+    - Another important aspect of PKI certificates is **`Public Key Pinning`**, otherwise called `PKP`. This is information that is sent between the client web browser and the web server so that trusting devices can download a trusted copy of a server's certificate, which includes the public key. Now it's called pinning because we store a copy of that server's certificate public key locally on the client device. And straight from the internet, from the RFC that defines how Public Key Pinning should use, that's RFC 7469; it literally states: `Key pinning` is a trust-on-first-use mechanism. What this means is that first time the client makes a connection to a secured site, that's when the server certificate public key is pinned or cached on that device.
+
+    - Well, this means, that in the future, when the client wants to connect to that same secured server, the client would require that the server provide a fingerprint that has been previously pinned, does a comparison. And so what this means is that we are mitigating certificate problems where we might have certificates issued to a known host, so it's got the same name, but from an unauthorized Certificate Authority.
+
+## Certificate Lifecycle Management
+
+- PKI Certificates donot last forever. They have a validity period, and they must be managed throughout their lifecycle.
+
+- Certificate Management is:
+
+  - Crucial for Larger Enterprises cause of the Large umber of certificates they work with, and need to manage.
+  - It's a part of legal compliance, and security best practices.
+  - They are centralized and de-centralized certificate management solutions available for managing certificates.
+  - There must be a plan for Rapid Certificate Replacement in case of a security breach.
+
+- The **`Certificate Lifecycle Management`**:
+
+  - It starts with **`Certificate Request`**.
+
+    - This process can be manual or automated.
+    - This is where the user or device requests a certificate from the CA or RA. The request is then validated by the CA or RA before issuing the certificate.
+    - It is a manual way essentially to generate key pairs and ask a CA to digitally sign the public key.
+    - Private key can be copied and saved to a safe location, or it can be made available to trusted thied parties, and when we do this it's called **`key escrow`**.
+    - CSR(Certificate Signing Request) is a file that contains the public key and some information about the entity that's requesting the certificate. It's normally called `PKCS#10` file format, where `PKCS` stands for `Public Key Cryptography Standards`.
+    - After that the CSR needs to be sent to CA to get the certificate signed, whether that means pasting the CSR into a form field for public CA or saving it on a file.
+    - Another way to request a certificate is to use a **`Simple Certificate Enrollment Protocol`** SCEP, which is the Simple Certificate Enrollment Protocol, or EST(), which is the Enrollment over Secure Transport.
+
+      This is often used for automation. Whether, we want to provide certificates for network equipment, like swithces and routers that support it, or perhaps smartphones, or other devices.
+
+  - Next is **`Certificate Issuance`**.
+
+    - The CA or RA issues the certificate after validating the request.
+    - The certificate is then signed by the CA or RA using their private key.
+    - This process can be manual, which could require administrator approval before certificate is issued.
+    - Process can be automated for new devices such as computers joining a Microsoft Active Directory Domain or smartphones connectiong to a MDM System.
+
+  - **`Certificate Installation`**.
+
+    - The certificate is installed on the user or device.
+    - It's stored in a secure location, such as a certificate store or a hardware security module.
+    - Generally, in any IT Organization, the IT Admins are responsible for installing certificates on devices.
+
+  - **`Certificate Usage`**.
+
+    - The certificate is used for secure communication.
+    - It's used to encrypt data, verify digital signatures, or authenticate users or devices.
+
+  - **`Certificate Revocation`**.
+
+    - The certificate is revoked if it's compromised or no longer needed.
+    - The CA or RA maintains a Certificate Revocation List (CRL) of revoked certificates.
+    - The CRL is used to check the validity of a certificate.
+
+  - **`Certificate Renewal`**.
+
+    - The certificate is renewed before it expires.
+    - The user or device requests a renewal from the CA or RA.
+    - The CA or RA issues a new certificate with an updated validity period.
+    - But, if you don't have a PKI Certificate renewed before expiration, it will be considered invalid. A new certificate will have to be requested.
