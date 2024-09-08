@@ -204,4 +204,4 @@
 
   ![](./imgs/Screenshot%202024-09-08%20at%209.01.00 AM.png)
 
-  This list gets updated when you update your system, and the new root certificate authorities are added to the list.
+  This list gets updated when you update your system, and the new root certificate authorities are added to the list. This list doesnot contain any of the intermediate CA certificates, as they are not trusted by the system.
