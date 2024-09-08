@@ -205,3 +205,25 @@
   ![](./imgs/Screenshot%202024-09-08%20at%209.01.00 AM.png)
 
   This list gets updated when you update your system, and the new root certificate authorities are added to the list. This list doesnot contain any of the intermediate CA certificates, as they are not trusted by the system.
+
+## How the chain of trust is built
+
+  ![](./imgs/Chain_of_trust_v2.svg.png)
+
+- As, you can ee in the diagram above at the bottom right most we have the Root Certificate Authority, which is self-signed and is trusted by the system. The intermediate certificate authority is signed by the root certificate authority, and the intermediate certificate authority signs the certificates of websites and other entities.
+
+- At the top of the chain of trust is the root certificate authority, which is a self-signed certificate. The root certificate authority is trusted by the system, and its certificate is installed in the system's trust store.
+
+- Following to we have the intermediate certificate authority, which is signed by the root certificate authority. The intermediate certificate authority signs the certificates of websites and other entities.
+
+- Each of them have it's own Certificate and pair of keys. In case of the Root CA, the Owner Info and Issuer Info are same, as it is self-signed. These Certificates come installed in the system, and are trusted by the system.
+
+- The Signature of Intermediate CA is made by the private key of the Root CA. And, in this case the Owner Info and Issuer Info are different. The Owner Info is the Intermediate CA, and the Issuer Info is the Root CA.
+
+  When the Intermediate CA is signed by the Root CA, this means that the Root CA trusts the Intermediate CA, and the Intermediate CA can sign the certificates of websites and other entities.
+
+  The Encryption here is done using the private key of the parent CA.
+
+- The `End User Certificate` is signed by the Intermediate CA, and the Owner Info is the website or the entity, and the Issuer Info is the Intermediate CA.
+
+  The Encryption here is done using the private key of the Intermediate CA.
