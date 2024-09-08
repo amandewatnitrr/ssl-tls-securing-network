@@ -227,3 +227,9 @@
 - The `End User Certificate` is signed by the Intermediate CA, and the Owner Info is the website or the entity, and the Issuer Info is the Intermediate CA.
 
   The Encryption here is done using the private key of the Intermediate CA.
+
+- But, now the question arises, **`If the private keys are secured, how the Parent CA sign the underlying certificates ??`**.
+
+  - The answer is that the private keys are stored in a secure location, and are used to sign the certificates.
+  - The Certificates are created at the owner end, and a Certificate Signing Request (CSR) is sent to the Parent CA, which is then signed by the Parent CA, by adding all the required information and is sent back to the owner.
+  - It means siging happens where the private key is stored, and the certificate is sent back to the owner.
