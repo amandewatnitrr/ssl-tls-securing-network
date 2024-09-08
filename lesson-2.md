@@ -121,3 +121,87 @@
 - It is commonly used in network security protocols, such as SSL/TLS, IPsec, and SSH.
 - HMAC is more secure than traditional message authentication codes because it uses a cryptographic hash function to generate the hash value.
 - HMAC can be used with any cryptographic hash function, such as MD5, SHA-1, SHA-256, and SHA-512.
+
+## RSA (Rivest-Shamir-Adleman) Encryption
+
+- RSA is a public-key encryption algorithm that is widely used for secure data transmission.
+- It uses two keys, a public key and a private key, to encrypt and decrypt data.
+- The public key is used to encrypt the data, and the private key is used to decrypt the data.
+- RSA is based on the mathematical problem of factoring large prime numbers, which is considered computationally difficult.
+- It is largely used in secure communication protocols in modern communication such as SSL/TLS, PGP, and SSH for secure data transmission.
+- The Key length is important in RSA encryption. The longer the key, the more secure the encryption. It has key lengths of 1024, 2048, 3072, and 4096 bits.
+
+## Using OpenSSL to Generate Key
+
+- OpenSSL is a command-line tool that can be used to generate keys, encrypt data, and perform other cryptographic operations.
+- In order to install `openssl` on Mac OS, you can use the following command:
+
+  ```bash
+  brew install openssl
+  ```
+
+- To generate a private key using OpenSSL, you can use the following command:
+
+  ```bash
+  openssl genrsa
+  ```
+
+  We can encrypt this private key using a passphrase to make it more secure.
+
+  ```bash
+  openssl genrsa -aes256 
+  ```
+
+  This command will generate a private key with a passphrase, the passphrase will be required to decrypt the private key.
+
+  ```bash
+  openssl genrsa -aes256 -out private.pem
+  ```
+
+  This command will generate a private key with a passphrase and save it to a file named `private.pem`. `pem` is the file extension for private keys, and it is commonly used in SSL/TLS certificates.
+
+  The Public Key is also encrypted along with the private key, and we can extract the public key from the private key using the following command:
+
+  ```bash
+  openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+  ```
+
+  So, in general the command looks like `openssl rsa -in <private_key_file> -outform PEM -pubout -out <public_key_file>`.
+  
+  Once, the command is entered, you will be asked for the passphrase to decrypt the private key, and then the public key will be extracted and saved to the file `public.pem`.
+
+## Exploring Website Certificates and Chain of Trust
+
+  ![](./imgs/Screenshot%202024-09-08%20at%208.32.31 AM.png)
+
+- So, the first thing we see is a chain of trust or certificates. This is because the certificate of Instagram is signed by a Certificate Authority (CA) which is signed by another CA and so on. This is called a chain of trust.
+
+- Here `DigiCert High Assurance EV Root CA` is the root CA, and is considered the root entity in the chain of trust. The `DigiCert SHA2 High Assurance Server CA` is the intermediate CA, and the `*.instagram.com` is the certificate of Instagram assigned by it.
+
+- We can also see the validity of the certificate, which is untill 16th September 2024. After, this date the certificate will be invalid and the website will be considered insecure, and a new certificate will be required.
+
+  ![](./imgs/Screenshot%202024-09-08%20at%208.40.06 AM.png)
+
+- If we move towards the detail section, we can see the details of the certificate. The certificate is issued to `*.instagram.com`, which is the owner and is issued by `DigiCert SHA2 High Assurance Server CA`.
+
+- In the following block, we find the details about the issuer of the certificate. It contains the Serial Number of the certificate, which is unique to the certificate and is used to identify it, if blocked or revoked, can be found in Certificate Revocation List (CRL). 
+
+  It also contains information about the algorithm used for creating the certificate, which is `SHA-256 with RSA Encryption`.
+
+  `Not Valid Before` and `Not Valid After` are the dates between which the certificate is valid.
+
+  ![](./imgs/Screenshot%202024-09-08%20at%208.42.30 AM.png)
+
+- The `Public Key Info` section contains the details about the public key used in the certificate. It contains the algorithm used for encryption, which is `RSA Encryption`. It also tells information about the key length, which is `2048 bits`. And, contains the signature along with the algorithm used for signing, which is `SHA-256 with RSA Encryption`.
+
+  ![](./imgs/Screenshot%202024-09-08%20at%208.47.32 AM.png)
+
+- The `Root Certificate Authourity` generally signs the certificate for itseelf, and is considered the root entity in the chain of trust. And, is the only certificate that is self-signed.
+  
+  But the question might come **`How do browsers trust these self signed root certificates ??`**. The answer is that the root certificate authority is already installed in the OS, and the browser trusts the root certificate authority. So, when the browser sees a certificate signed by the root certificate authority, it trusts the certificate.
+
+- If you go to `Keychain Access` on Mac OS, you can see the root certificate authorities installed on your system. You can also see the certificates that are trusted by the system. These are just few of them.
+
+  ![](./imgs/Screenshot%202024-09-08%20at%209.01.00 AM.png)
+
+  This list gets updated when you update your system, and the new root certificate authorities are added to the list.
