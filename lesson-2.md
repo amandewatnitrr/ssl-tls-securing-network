@@ -233,3 +233,25 @@
   - The answer is that the private keys are stored in a secure location, and are used to sign the certificates.
   - The Certificates are created at the owner end, and a Certificate Signing Request (CSR) is sent to the Parent CA, which is then signed by the Parent CA, by adding all the required information and is sent back to the owner.
   - It means siging happens where the private key is stored, and the certificate is sent back to the owner.
+
+## Chain of Trust Verification
+
+- So, when we open any webpage and, we see HTTPS sign in it, Web Server sends a SSL Certificate to the browser, which is the `End User Certificate`.
+
+- But, in fact the Server sends you all the Intermediate CA Certificates along with the End User Certificate as well, and after that verfication on the user end starts.
+
+- We start with the `End User Certificate`, and check the Issuer Info, and then we check the `Intermediate CA Certificate` with the same Issuer Info, and then we check the `Root CA Certificate` with the same Issuer Info.
+
+  It also checks for the validity period of each of these certificates, and if any of the certificate is expired, the chain of trust is broken.
+
+  The Next check is the check of the signature, that the certificate contains the Parent CA's signature, and the signature is verified using the public key of the Parent CA, by comparing the `Issuer info` of the Certificate with the `Owner Info` of the Parent CA.
+
+  <details>
+    <summary>
+      Note
+    </summary>
+
+    The Public Key of the Parent CA verifies the validity of the certificate that it has produced.
+  </details>
+
+- Now, to ensure the validitiy of the Intermediate CA Certificate, the same process is repeated, and the signature is verified using the public key of the Root CA, which is installed in the system.
