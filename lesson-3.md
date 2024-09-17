@@ -201,4 +201,32 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
 
     - The load balancer may re-encrypt the traffic using the same or another TLS session before sending it back to the client, depending on the configuration.
 
-  ![](./imgs/Screenshot%202024-09-17%20at%203.32.21 PM.png)
+  <table>
+  <tr>
+  <td>
+
+  ```mermaid
+    sequenceDiagram
+    participant Client
+    participant Load Balancer (TLS Terminator)
+    participant Backend Server
+
+    Client->>Load Balancer (TLS Terminator): ClientHello (Starts TLS Handshake)
+    Load Balancer (TLS Terminator)-->>Client: ServerHello, TLS Certificate (Asymmetric)
+    Client->>Load Balancer (TLS Terminator): Encrypt session key (Symmetric key) with server's public key
+    Load Balancer (TLS Terminator)-->>Client: Handshake Complete (Session Key Agreed)
+
+    Note right of Client: Data transfer (Symmetric encryption)
+
+    Client->>Load Balancer (TLS Terminator): Encrypted Data (Symmetric)
+    Load Balancer (TLS Terminator)->>Load Balancer (TLS Terminator): Decrypt data (Symmetric)
+
+    Note right of Load Balancer (TLS Terminator): TLS Termination (Decryption)
+
+    Load Balancer (TLS Terminator)->>Backend Server: Plain HTTP Request
+    Backend Server->>Load Balancer (TLS Terminator): Plain HTTP Response
+    Load Balancer (TLS Terminator)->>Client: Encrypted Response (Symmetric)
+  ```
+  </td>
+  </tr>
+  </table>
