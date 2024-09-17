@@ -202,8 +202,6 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
     - The load balancer may re-encrypt the traffic using the same or another TLS session before sending it back to the client, depending on the configuration.
 
   <table>
-  <tr>
-  <td>
 
   ```mermaid
     sequenceDiagram
@@ -227,6 +225,4 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
     Backend Server->>Load Balancer (TLS Terminator): Plain HTTP Response
     Load Balancer (TLS Terminator)->>Client: Encrypted Response (Symmetric)
   ```
-  </td>
-  </tr>
-  </table>
+  
