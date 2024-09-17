@@ -103,3 +103,102 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
   It is marked as `Application Data`. And, this is the actual data that is sent from the client to the server.
 
   ![](./imgs/Screenshot%202024-09-08%20at%209.55.46 PM%201.png)
+
+## TLS Termination
+
+- `TLS Termination` is the process of decrypting the encrypted data that is received from the client, and then sending it to the server in unencrypted form.
+
+- `TLS Termination` is done by either by the Gateway/Load Balancer/Reverse Proxy Server. The Gateway/Load Balancer/Reverse Proxy Server is responsible for decrypting the encrypted data, and then sending it to the server in unencrypted form.
+
+  It is also responsible for encrypting the data that is sent from the server to the client.
+
+- `TLS Termination` is done to reduce the load on the server. The server does not have to do the decryption of the encrypted data or encryption of the data that is sent to the client. And, let's the server focus on other tasks.
+
+- The process involves exchanging the symmetric key between the client and the Gateway/Load Balancer/Reverse Proxy Server in order to decrypt the encrypted data.
+
+  The Symmetric Key is then used to decrypt the encrypted data that is received from the client, and encrypt the data that is sent to the client.
+
+- The Gateway/Load Balancer/Reverse Proxy Server has the private key of the server, and it uses this private key to decrypt the encrypted data that is received from the client.
+
+    ```mermaid
+    graph LR
+        A[Client] -->|TLS/HTTPS Traffic| B[Load_Balancer/Gatway/Reverse_Proxy]
+    B -->|Plain HTTP Traffic| C[Servers]
+
+        style A fill:#a1f,stroke:#333,stroke-width:2px;
+        style B fill:#f1e,stroke:#333,stroke-width:2px;
+        style C fill:#a1f,stroke:#333,stroke-width:2px;
+    ```
+
+    <hr>
+
+    ```mermaid
+    flowchart TD
+        A[Client] -->|TLS/HTTPS Traffic| B[Load_Balancer/Gateway/Reverse_Proxy]
+        B -->|Plain HTTP Traffic| C[Server 1]
+        B -->|Plain HTTP Traffic| D[Server 2]
+        B -->|Plain HTTP Traffic| E[Server 3]
+        
+        subgraph F[TLS Termination]
+            B
+        end
+        
+        subgraph G[Backend Servers]
+            C
+            D
+            E
+        end
+
+        style A fill:#a1f,stroke:#333,stroke-width:2px;
+        style B fill:#f1e,stroke:#333,stroke-width:2px;
+        style C fill:#a1f,stroke:#333,stroke-width:2px;
+        style D fill:#a1f,stroke:#333,stroke-width:2px;
+        style E fill:#a1f,stroke:#333,stroke-width:2px;
+    ```
+
+- This type of architecture is also known as `SSL Offloading` or `SSL Acceleration`. It is generally used in large scale applications where there are a large number of clients connecting to the server, requesting to a private server.
+
+### Asymmetric and Symmetric Encryption in TLS Termination
+
+- TLS combines both Asymmetric and Symmetric Encryption to ensure security, efficiency and authenticity.
+
+- Asymmetric Exncryption:
+
+  - Used in the initial phase of the TLS Handshake.
+  - Involves the use of Public and Private Key Pair.
+  - Used to exchange the Symmetric Key between the client and the server.
+  - This is computationally expensive, but it is used only once in the beginning of the session.
+
+- Symmetric Encryption:
+
+  - Used to encrypt the actual data that is sent between the client and the server.
+  - It is fast and less resource intensive, allowing for efficient data transfer.
+
+- TLS Termination Step-by-Step Process:
+
+  - Client-Server TLS Handshake (Asymmetric Encryption):
+
+    - The client initiates a connection to the server by requesting a secure (TLS) connection.
+    - The server (or load balancer) sends its TLS certificate (which includes the public key) to the client.
+    - The client uses the public key to encrypt a randomly generated session key (symmetric key) and sends it back to the server.
+    - The server (or load balancer) decrypts this with its private key, establishing a shared symmetric key for further communication.
+
+  - Data Exchange using Symmetric Encryption:
+
+    - Once the handshake is completed, the client and the server communicate using the shared symmetric key.
+
+    - All data (web pages, API calls, etc.) is now encrypted using a symmetric encryption algorithm (e.g., AES) for efficiency.
+
+  - TLS Termination:
+
+    - The TLS-encrypted traffic reaches the load balancer (or TLS terminator).
+    - The load balancer performs TLS termination by decrypting the symmetric-encrypted traffic.
+    - The now plain (unencrypted) HTTP traffic is forwarded to the backend servers for processing.
+
+  - Plain Text to Server:
+
+    - The backend servers receive the unencrypted traffic, process the request, and respond to the load balancer in plain HTTP.
+
+    - The load balancer may re-encrypt the traffic using the same or another TLS session before sending it back to the client, depending on the configuration.
+
+  ![](./imgs/Untitled%20diagram-2024-09-17-100443.svg)
