@@ -201,4 +201,4 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
 
     - The load balancer may re-encrypt the traffic using the same or another TLS session before sending it back to the client, depending on the configuration.
 
-  ![](./imgs/Untitled%20diagram-2024-09-17-100443.svg)
+  ![](./imgs/Screenshot%202024-09-17%20at%203.32.21 PM.png)
