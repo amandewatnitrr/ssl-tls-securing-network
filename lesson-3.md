@@ -201,8 +201,6 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
 
     - The load balancer may re-encrypt the traffic using the same or another TLS session before sending it back to the client, depending on the configuration.
 
-  <table>
-
   ```mermaid
     sequenceDiagram
     participant Client
@@ -225,4 +223,76 @@ So sometimes you hear such term as SSL certificate. So certificate doesn't depen
     Backend Server->>Load Balancer (TLS Terminator): Plain HTTP Response
     Load Balancer (TLS Terminator)->>Client: Encrypted Response (Symmetric)
   ```
-  
+
+- In this way, TLS termination allows for secure, efficient, and scalable communication between clients and servers.
+
+### How to establish TLS Termination:
+
+- Establishing TLS Termination with NGINX
+
+  - NGINX is a popular open-source web server and reverse proxy server that supports TLS termination.
+  - Configure TLS Termination with NGINX:
+
+    - Install NGINX on the server.
+
+      - Ubuntu/Debian: Use the command `sudo apt install nginx`
+      - CentOS/RHEL: Use the command `sudo yum install nginx`
+
+    - Obtain a TLS/SSL certificate for your domain.
+
+      - Use `Let's Encrypt` or purchase a certificate from a Certificate Authority (CA).
+
+        - For `Let's Encrypt`, you can use the `Certbot` tool to obtain a free TLS certificate.
+
+            ```bash
+            sudo apt install certbot python3-certbot-nginx
+            sudo certbot --nginx -d example.com
+            ```
+
+    - Configure NGINX to use the TLS certificate.
+
+      - Edit the NGINX Configuration File, typically located at `/etc/nginx/nginx.conf` or `/etc/nginx/sites-available/default`.
+
+      - Add the following lines to the configuration file:
+
+        ```nginx
+        server {
+          listen 443 ssl; # Listens on port 443 for HTTPS traffic
+          server_name yourdomain.com;
+
+          # Path to SSL certificate and private key
+          ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
+          ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
+
+          # SSL settings for stronger security
+          ssl_protocols TLSv1.2 TLSv1.3;
+          ssl_ciphers HIGH:!aNULL:!MD5;
+
+          # Proxy traffic to the backend
+          location / {
+              proxy_pass http://backend_server_ip:80;  # IP of backend server
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+          }
+        }
+        ```
+
+    - Restart NGINX to apply the changes using the command `sudo systemctl restart nginx`.
+
+## TLS Initiation
+
+- `TLS Initiation` is the process of encrypting the data that is sent from the client to the server using the TLS protocol. This mainly happens during the TLS Handshake or where trying to send data from client to server.
+
+- For example, in some cases where we send data from an internal network to an external network, we first send data to a Gateway/Load Balancer/Reverse Proxy Server, which then encrypts the data using the TLS protocol before sending it to the External server.
+
+- `TLS Initiation` is done to ensure that the data is encrypted during transmission, providing confidentiality and security. It is also used to establish a secure connection between the client and the server.
+
+- `TLS Initiation` involves use of Asymmetric Encryption to exchange the Symmetric Key between the client and the server, and then use of Symmetric Encryption to encrypt the actual data that is sent between the client and the server.
+
+- `TLS Initiation` is an important step in securing data transmission over the internet, especially when sensitive information is being transmitted.
+
+- `TLS Initiation` is also known as `TLS Encryption` or `TLS Handshake`.
+- `TLS Termination` is the reverse process of `TLS Initiation`, where the encrypted data is decrypted before being sent to the server.
+
